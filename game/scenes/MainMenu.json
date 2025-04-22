@@ -1,0 +1,28 @@
+{
+    "scene_name": "Main menu",
+    "scene": [
+        {
+            "Text": {
+                "text": "Space war",
+                "font_size": 15,
+                "font_style": 0,
+                "font_family": "KZ Supercell-Magic.ttf",
+                "fill_color": "White",
+                "outlined_color": "Black"
+            }
+        }, {
+            "Button": {
+                "position": { "x": 100, "y": 200 },
+                "size": { "width": 200, "height": 30 },
+                "Text": {
+                    "text": "Create a game",
+                    "font_size": 15,
+                    "font_style": 0,
+                    "font_family": "KZ Supercell-Magic.ttf",
+                    "fill_color": "White",
+                    "outlined_color": "Black"
+                }
+            }
+        }
+    ]
+}

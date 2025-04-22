@@ -1,0 +1,46 @@
+scene_name: MainMenu
+game_objects:
+  - uuid: 1
+    TransformComponent:
+      translation: [ 25, 100 ]
+      rotation: 0
+      scale: [1, 1]
+    TextComponent:
+      text: Space War
+      size: 45
+      font_path: "KZ Supercell-Magic.ttf"
+      color: [255,255,255,255]
+  - uuid: 2
+    TransformComponent:
+      translation: [ 25, 200 ]
+      rotation: 0
+      scale: [ 1, 1 ]
+    TextComponent:
+      text: Singleplayer
+      size: 25
+      font_path: "KZ Supercell-Magic.ttf"
+      color: [ 255,255,255,255 ]
+    ButtonComponent:
+      on_click_function_name: "OnClick"
+      enabled: true
+      is_visible_shape: false
+      size: { "width": 100, "height": 25 }
+    ScriptComponent:
+      file_name: "singleplayer_button.lua"
+  - uuid: 3
+    TransformComponent:
+      translation: [ 25, 250 ]
+      rotation: 0
+      scale: [ 1, 1 ]
+    TextComponent:
+      text: Multiplayer
+      size: 25
+      font_path: "KZ Supercell-Magic.ttf"
+      color: [ 255,255,255,255 ]
+    ButtonComponent:
+      on_click_function_name: "OnClick"
+      enabled: true
+      is_visible_shape: true
+      size: { "width": 100, "height": 25 }
+    ScriptComponent:
+      file_name: "multiplayer_button.lua"
