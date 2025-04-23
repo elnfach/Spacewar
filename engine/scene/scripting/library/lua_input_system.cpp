@@ -43,8 +43,8 @@ static constexpr luaL_Reg input[] = {
 	{nullptr, nullptr}
 };
 
-static int input_lib_require(lua_State *L) {
-	luaL_newlib(L, input);
+static int input_lib_require(lua_State *p_state) {
+	luaL_newlib(p_state, input);
 	return 1;
 }
 

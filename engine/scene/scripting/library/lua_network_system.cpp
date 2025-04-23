@@ -8,9 +8,9 @@
 #include "scene/networking/network_engine.hpp"
 #include "SFML/System/Vector2.hpp"
 
-static int receive_data(lua_State* p_state)
+static int on_server_receive_data(lua_State* p_state)
 {
-	
+
 	return 1;
 }
 

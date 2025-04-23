@@ -4,7 +4,7 @@
 
 #include "lua_scene_system.hpp"
 
-#include "lua/lua.hpp"
+#include "get_entity.hpp"
 #include "scene/main/scene_tree.hpp"
 #include "scene/scripting/script_engine.hpp"
 

@@ -25,14 +25,14 @@ namespace spacewar
 		void start();
 
 		void draw(const std::shared_ptr<sf::RenderWindow>& p_window);
-		void update(float_t dt);
+		void update(float_t p_dt);
 	public:
 
-		game_object create_entity(uuid uuid);
+		game_object create_entity(uuid p_uuid);
 		game_object copy_entity(const entity& p_entity);
-		entity get_object_by_uuid(const uuid& uuid) const;
+		entity get_object_by_uuid(const uuid& p_uuid) const;
 
-		void destroy_entity_by_uuid(const uuid& uuid);
+		void destroy_entity_by_uuid(const uuid& p_uuid);
 		void destroy_entity(const game_object& p_game_object);
 
 		void on_runtime_start();

@@ -4,8 +4,7 @@
 
 #include "script_engine.hpp"
 
-#include <iostream>
-
+#include "lua/lua.hpp"
 #include "library/lua_input_system.hpp"
 #include "library/lua_entity_system.hpp"
 #include "library/lua_network_system.hpp"
@@ -20,9 +19,19 @@ struct script_engine_data
 };
 static script_engine_data* s_data = nullptr;
 
-bool spacewar::script_engine::exist_file(const std::string& p_name)
+bool spacewar::script_engine::exist_file(const std::string_view& p_name)
 {
 	return std::filesystem::exists(s_data->scripts_path / p_name);
+}
+
+bool spacewar::script_engine::script_contains(const uuid& p_uuid)
+{
+	return s_data->scripts.contains(p_uuid);
+}
+
+std::shared_ptr<spacewar::script> spacewar::script_engine::get_script_by_uuid(const uuid& p_uuid)
+{
+	return s_data->scripts.at(p_uuid);
 }
 
 void spacewar::script_engine::create_game_object(const game_object& p_game_object)
@@ -36,33 +45,42 @@ void spacewar::script_engine::create_game_object(const game_object& p_game_objec
 	}
 }
 
-void spacewar::script_engine::start_game_object(const uuid& p_uuid)
+template <>
+void spacewar::script::push_value<int32_t>(const int32_t p_value)
 {
-	if (s_data->scripts.contains(p_uuid))
-	{
-		const auto script = s_data->scripts.at(p_uuid);
-		script->invoke_start();
-	}
+	lua_pushinteger(m_state, p_value);
 }
 
-void spacewar::script_engine::update_game_object(const uuid& p_uuid, const float p_dt)
+template <>
+void spacewar::script::push_value<float_t>(const float_t p_value)
 {
-	if (s_data->scripts.contains(p_uuid))
-	{
-		const auto script = s_data->scripts.at(p_uuid);
-		script->invoke_update(p_dt);
-	}
+	lua_pushnumber(m_state, p_value);
 }
 
-void spacewar::script_engine::invoke_function(const uuid& p_uuid, const std::string& p_func_name,
-	void* p_args)
+template <>
+void spacewar::script::push_value<double_t>(const double_t p_value)
 {
-	if (s_data->scripts.contains(p_uuid))
-	{
-		const auto script = s_data->scripts.at(p_uuid);
-		script->invoke_function(p_func_name, p_args);
-	}
+	lua_pushnumber(m_state, p_value);
 }
+
+template <>
+void spacewar::script::push_value<std::string_view>(const std::string_view p_value)
+{
+	lua_pushstring(m_state, p_value.data());
+}
+
+template <>
+void spacewar::script::push_value<bool>(const bool p_value)
+{
+	lua_pushboolean(m_state, p_value);
+}
+
+template <>
+void spacewar::script::push_value<lua_CFunction>(const lua_CFunction p_value)
+{
+	lua_pushcfunction(m_state, p_value);
+}
+
 
 void spacewar::script_engine::set_current_scene(scene* p_context)
 {
@@ -127,6 +145,16 @@ void spacewar::script::close() const
 	lua_close(m_state);
 }
 
+void spacewar::script::register_constant(const std::string_view& p_name) const
+{
+	lua_getglobal(m_state, p_name.data());
+}
+
+void spacewar::script::call_function(const size_t p_size) const
+{
+	lua_pcall(m_state, p_size, 0, 0);
+}
+
 void spacewar::script::load(const std::string& p_name) const
 {
 	luaL_openlibs(m_state);
@@ -135,24 +163,4 @@ void spacewar::script::load(const std::string& p_name) const
 	{
 		return void();
 	}
-}
-
-void spacewar::script::invoke_start() const
-{
-	lua_getglobal(m_state, "start");
-	lua_pcall(m_state, 0, 0, 0);
-}
-
-void spacewar::script::invoke_update(const float p_dt) const
-{
-	lua_getglobal(m_state, "update");
-	lua_pushnumber(m_state, p_dt);
-	lua_pcall(m_state, 1, 0, 0);
-}
-
-void spacewar::script::invoke_function(const std::string& p_name, void* p_args) const
-{
-	lua_getglobal(m_state, p_name.c_str());
-	lua_pushlightuserdata(m_state, p_args);
-	lua_pcall(m_state, 1, 0, 0);
 }

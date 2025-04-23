@@ -62,7 +62,7 @@ void spacewar::scene::start()
 			entity entity = {e, this};
 			game_object gm = {entity};
 			script_engine::create_game_object(gm);
-			script_engine::start_game_object(gm.uuid());
+			script_engine::invoke_function(gm.uuid(), "start");
 		}
 	}
 
@@ -71,7 +71,7 @@ void spacewar::scene::start()
 		for (const auto view = m_registry.view<IDComponent, NetworkComponent, ScriptComponent>(); const auto e : view)
 		{
 			auto [id, network, script] = view.get<IDComponent, NetworkComponent, ScriptComponent>(e);
-			script_engine::invoke_function(id.ID, network.create_function, nullptr);
+			script_engine::invoke_function(id.ID, network.create_function);
 		}
 	}
 }
@@ -123,7 +123,7 @@ void spacewar::scene::draw(const std::shared_ptr<sf::RenderWindow>& p_window)
 
 			if (glm::all(conditions) && component.enabled && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			{
-				script_engine::invoke_function(ID.ID, component.on_click_function_name, nullptr);
+				script_engine::invoke_function(ID.ID, component.on_click_function_name);
 			}
 
 			if (component.is_visible_shape)
@@ -152,14 +152,14 @@ void spacewar::scene::draw(const std::shared_ptr<sf::RenderWindow>& p_window)
 	p_window->display();
 }
 
-void spacewar::scene::update(const float_t dt)
+void spacewar::scene::update(const float_t p_dt)
 {
 	// Scripting
 	{
 		for (const auto view = m_registry.view<IDComponent, ScriptComponent>(); const auto e : view)
 		{
 			entity entity = {e, this};
-			script_engine::update_game_object(entity.uuid(), dt);
+			script_engine::invoke_function(entity.uuid(), "update", p_dt);
 		}
 	}
 
@@ -168,18 +168,18 @@ void spacewar::scene::update(const float_t dt)
 		for (const auto view = m_registry.view<IDComponent, NetworkComponent, ScriptComponent>(); const auto e : view)
 		{
 			auto [id, network, script] = view.get<IDComponent, NetworkComponent, ScriptComponent>(e);
-			script_engine::invoke_function(id.ID, "SendPosition", nullptr);
+			script_engine::invoke_function(id.ID, "SendPosition");
 		}
 	}
 }
 
-spacewar::game_object spacewar::scene::create_entity(const uuid uuid)
+spacewar::game_object spacewar::scene::create_entity(const uuid p_uuid)
 {
 	const entity entity = {m_registry.create(), this};
 	game_object game_object = {entity};
-	game_object.addComponent<IDComponent>(uuid);
+	game_object.addComponent<IDComponent>(p_uuid);
 	game_object.addComponent<TransformComponent>();
-	m_entities[uuid] = entity;
+	m_entities[p_uuid] = entity;
 	return game_object;
 }
 
@@ -203,10 +203,10 @@ spacewar::entity spacewar::scene::get_object_by_uuid(const uuid& uuid) const
 	return {};
 }
 
-void spacewar::scene::destroy_entity_by_uuid(const uuid& uuid)
+void spacewar::scene::destroy_entity_by_uuid(const uuid& p_uuid)
 {
-	if (m_entities.contains(uuid))
-		destroy_entity(m_entities.at(uuid));
+	if (m_entities.contains(p_uuid))
+		destroy_entity(m_entities.at(p_uuid));
 }
 
 void spacewar::scene::on_runtime_start()

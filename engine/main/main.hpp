@@ -5,11 +5,10 @@
 #ifndef MAIN_HPP
 #define MAIN_HPP
 #include <memory>
+#include "config/engine.hpp"
 
 namespace spacewar
 {
-	class engine;
-
 	class main {
 	public:
 		bool init();

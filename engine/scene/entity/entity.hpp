@@ -39,9 +39,9 @@ namespace spacewar
 			return m_scene->m_registry.emplace<Type>(m_entity, std::forward<Args>(p_args)...);
 		}
 		template<typename T, typename... Args>
-		T& add_or_replace_component(Args&&... args) const
+		T& add_or_replace_component(Args&&... p_args) const
 		{
-			return m_scene->m_registry.emplace_or_replace<T>(m_entity, std::forward<Args>(args)...);
+			return m_scene->m_registry.emplace_or_replace<T>(m_entity, std::forward<Args>(p_args)...);
 		}
 		template<typename Type>
 		[[nodiscard]] Type& get_component() const

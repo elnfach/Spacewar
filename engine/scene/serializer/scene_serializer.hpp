@@ -15,8 +15,8 @@ namespace spacewar
 	public:
 		scene_serializer() = default;
 
-		void serialize(const std::string& file_path);
-		bool deserialize(const std::string& p_file_path, const std::shared_ptr<scene>& p_scene);
+		void serialize(const std::string_view& p_file_path);
+		bool deserialize(const std::string_view& p_file_path, const std::shared_ptr<scene>& p_scene);
 	};
 }
 

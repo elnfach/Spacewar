@@ -41,7 +41,6 @@ bool input::isKeyPressed(const sf::Keyboard::Key p_key)
 {
 	if (!s_input_data->is_paused && sf::Keyboard::isKeyPressed(p_key))
 	{
-		std::cerr << "Key pressed: " << static_cast<int>(p_key) << std::endl;
 		return sf::Keyboard::isKeyPressed(p_key);
 	}
 	return false;

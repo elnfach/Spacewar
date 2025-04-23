@@ -3,7 +3,6 @@
 //
 
 #include "main.hpp"
-#include "config/engine.hpp"
 
 bool spacewar::main::init()
 {
@@ -11,5 +10,5 @@ bool spacewar::main::init()
 	if (m_engine->run())
 	{
 	}
-	return 0;
+	return true;
 }

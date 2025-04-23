@@ -62,7 +62,6 @@ function update(dt)
     if Input.IsKeyPressed(Input.Key_Space()) then
         if(colddown_timer >= colddown) then
             if bullet_count > 0 then
-            -- Нужно сделать удаление сущностей со сцены дял оптимизации
                 for i,v in ipairs(bullets) do
                     table.remove(bullets, i)
                     Entity.Destroy(v)
@@ -76,7 +75,6 @@ function update(dt)
     end
 
     if(Input.IsKeyPressed(Input.Key_W())) then
-        print("KEY_W")
         if(impulse <= max_impulse) then
             impulse = impulse + dt
             radians = math.rad(Entity.GetRotation(player_id))

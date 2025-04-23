@@ -36,10 +36,10 @@ namespace spacewar
 			entity.remove_component<Type>();
 		}
 	private:
-		explicit game_object(const entity& p_entity) : entity(p_entity) {};
+		game_object(const entity& p_entity) : entity(p_entity) {};
 	protected:
 		virtual void start() {}
-		virtual void update(float dt) {}
+		virtual void update(float p_dt) {}
 	private:
 		entity entity;
 		friend class scene;

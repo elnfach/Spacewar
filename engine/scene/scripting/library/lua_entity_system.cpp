@@ -8,7 +8,6 @@
 
 #include "get_entity.hpp"
 #include "lua_util.hpp"
-#include "lua/lua.hpp"
 
 
 // TODO: rework
@@ -39,20 +38,20 @@ static int get_position(lua_State* p_state)
 	return 0;
 }
 
-static int lua_rotate(lua_State* L) {
-	if (const auto entity = get_entity(L, 1)) {
+static int lua_rotate(lua_State* p_state) {
+	if (const auto entity = get_entity(p_state, 1)) {
 		auto& [transition, rotation, scale] = entity->get_component<spacewar::TransformComponent>();
-		const float angle = lua_tonumber(L, 2);
+		const float angle = lua_tonumber(p_state, 2);
 		rotation += angle;
 	}
 	return 0;
 }
 
-static int lua_move(lua_State* L) {
-	if (const auto entity = get_entity(L, 1)) {
+static int lua_move(lua_State* p_state) {
+	if (const auto entity = get_entity(p_state, 1)) {
 		auto& [transition, rotation, scale] = entity->get_component<spacewar::TransformComponent>();
-		const float x = lua_tonumber(L, 2);
-		const float y = lua_tonumber(L, 3);
+		const float x = lua_tonumber(p_state, 2);
+		const float y = lua_tonumber(p_state, 3);
 		transition += sf::Vector2f(x, y);
 	}
 	return 0;

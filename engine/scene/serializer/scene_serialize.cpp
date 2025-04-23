@@ -10,14 +10,14 @@
 #include "fkYAML/node.hpp"
 #include "scene/entity/game_object.hpp"
 
-void spacewar::scene_serializer::serialize(const std::string& file_path)
+void spacewar::scene_serializer::serialize(const std::string_view& p_file_path)
 {
 
 }
 
-bool spacewar::scene_serializer::deserialize(const std::string& p_file_path, const std::shared_ptr<scene>& p_scene)
+bool spacewar::scene_serializer::deserialize(const std::string_view& p_file_path, const std::shared_ptr<scene>& p_scene)
 {
-	std::ifstream ifs(p_file_path);
+	std::ifstream ifs((p_file_path.data()));
 	const fkyaml::node data = fkyaml::node::deserialize(ifs);
 	if (data["scene_name"].is_null())
 	{
