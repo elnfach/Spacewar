@@ -3,29 +3,7 @@
 #
 scene_name: Game
 game_objects:
-  - uuid: 1
-    TransformComponent:
-      translation: [ 100, 200 ]
-      rotation: 0
-      scale: [ 1, 1 ]
-    SpriteComponent:
-      offset: { "x": 0, "y": 0 }
-      texture: "space_craft.png"
-      max_size: { "width": 100, "height": 100 }
-    ScriptComponent:
-      file_name: "player.lua"
-  - uuid: 2
-    TransformComponent:
-      translation: [ 100, 400 ]
-      rotation: 0
-      scale: [ 0.5, 0.5 ]
-    SpriteComponent:
-      offset: { "x": 0, "y": 0 }
-      texture: "laser.png"
-      max_size: { "width": 50, "height": 50 }
-    ScriptComponent:
-      file_name: "laser.lua"
-  - uuid: 3
+  - uuid: 1     # Network observer
     TransformComponent:
       translation: [ 0, 0 ]
       rotation: 0
@@ -36,3 +14,39 @@ game_objects:
       on_client_disconnect_function_name: "OnServerClientDisconnected"
     ScriptComponent:
       file_name: "server.lua"
+  - uuid: 4
+    TransformComponent:
+      translation: [ 0, 0 ]
+      rotation: 0
+      scale: [ 1, 1 ]
+prefabs:
+  - uuid: 2   # Player
+    TransformComponent:
+      translation: [ 0, 0 ]
+      rotation: 0
+      scale: [ 1, 1 ]
+    RectangleTransformComponent:
+      local_translation: [ 0, 0 ]
+      local_rotation: 0
+      local_scale: [ 1, 1 ]
+    SpriteComponent:
+      texture: "space_craft.png"
+      max_size: { "width": 100, "height": 100 }
+    CameraComponent:
+      view: ""
+    ScriptComponent:
+      file_name: "player.lua"
+  - uuid: 3 # Bullet
+    TransformComponent:
+      translation: [ 0, 0 ]
+      rotation: 0
+      scale: [ 0.5, 0.5 ]
+    RectangleTransformComponent:
+      local_translation: [ 0, 0 ]
+      local_rotation: 0
+      local_scale: [ 1, 1 ]
+    SpriteComponent:
+      texture: "laser.png"
+      max_size: { "width": 50, "height": 50 }
+    ScriptComponent:
+      file_name: "laser.lua"

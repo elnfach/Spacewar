@@ -6,6 +6,6 @@
 #define LUA_ENTITY_SYSTEM_HPP
 
 struct lua_State;
-void load_entity_system_init(lua_State *p_state);
+void load_entity_system(lua_State *p_state);
 
 #endif //LUA_ENTITY_SYSTEM_HPP

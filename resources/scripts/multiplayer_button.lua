@@ -10,5 +10,4 @@ end
 
 function OnClick()
     Scene.LoadSceneByName("MultiplayerMenu")
-    Network.CreateClient()
 end

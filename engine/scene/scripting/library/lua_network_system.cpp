@@ -4,6 +4,9 @@
 
 #include "lua_network_system.hpp"
 
+#include <cstdint>
+#include <string_view>
+
 #include "lua_util.hpp"
 #include "scene/networking/network_engine.hpp"
 #include "SFML/System/Vector2.hpp"
@@ -23,12 +26,15 @@ static int send_data(lua_State* p_state) {
 }
 
 static int create_client(lua_State* p_state) {
-	spacewar::network_engine::start_client();
+	const auto ip_address = lua_tostring(p_state, 1);
+	const auto port = lua_tostring(p_state, 2);
+	spacewar::network_engine::start_client(ip_address, port);
 	return 0;
 }
 
 static int create_server(lua_State* p_state) {
-	spacewar::network_engine::start_server();
+	const auto port = lua_tostring(p_state, 1);
+	spacewar::network_engine::start_server(port);
 	return 0;
 }
 
@@ -44,7 +50,7 @@ static int input_lib_require(lua_State* p_state) {
 	return 1;
 }
 
-void load_network_system_init(lua_State* p_state)
+void load_network_system(lua_State* p_state)
 {
 	luaL_requiref(p_state, "Network", input_lib_require, 1);
 	lua_pop(p_state, 1);

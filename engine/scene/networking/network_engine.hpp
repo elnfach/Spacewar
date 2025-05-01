@@ -4,7 +4,9 @@
 
 #ifndef NETWORK_ENGINE_HPP
 #define NETWORK_ENGINE_HPP
-#include "protocol.hpp"
+#include <string_view>
+
+#include "components/protocol.hpp"
 
 namespace spacewar
 {
@@ -15,11 +17,11 @@ namespace spacewar
 	private:
 
 	public:
-		static void start_server();
+		static void start_server(const std::string_view& p_port);
 		static void stop_server();
 		static void server_send_data(const position& p_position);
 
-		static void start_client();
+		static void start_client(const std::string_view& p_ip_address, const std::string_view& p_port);
 		static void stop_client();
 		static void listen();
 		static void client_send_data(const position& p_position);

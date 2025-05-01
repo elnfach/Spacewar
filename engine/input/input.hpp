@@ -4,7 +4,6 @@
 
 #ifndef INPUT_HPP
 #define INPUT_HPP
-#include <memory>
 
 #include "SFML/Window/Keyboard.hpp"
 #include "SFML/Window/Mouse.hpp"
@@ -16,16 +15,19 @@ namespace sf
 
 class input {
 public:
-	static void initialize(const std::shared_ptr<sf::RenderWindow>& p_window);
-	static void finalize();
+	input() = delete;
+	explicit input(sf::RenderWindow& window)
+		: m_window(window)
+	{}
 
-	static void pause();
-	static void resume();
+	void pause();
+	void resume();
 
-	static bool isKeyPressed(sf::Keyboard::Key p_key);
-	static bool isMouseButtonPressed(sf::Mouse::Button p_button);
+	bool isKeyPressed(sf::Keyboard::Key p_key) const;
+	bool isMouseButtonPressed(sf::Mouse::Button p_button) const;
+private:
+	bool m_is_paused = false;
+	sf::RenderWindow& m_window;
 };
-
-
 
 #endif //INPUT_HPP

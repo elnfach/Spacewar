@@ -4,13 +4,15 @@
 
 #include "lua_scene_system.hpp"
 
+#include <iostream>
+
 #include "get_entity.hpp"
 #include "scene/main/scene_tree.hpp"
 #include "scene/scripting/script_engine.hpp"
 
 static int load_scene_by_name(lua_State *p_state) {
 	const auto scene_name = lua_tostring(p_state, 1);
-	spacewar::scene_tree::set_current_scene(scene_name);
+	//spacewar::scene_tree::set_current_scene(scene_name);
 	return 0;
 }
 
@@ -24,7 +26,7 @@ static int input_lib_require(lua_State* p_state) {
 	return 1;
 }
 
-void load_scene_system_init(lua_State* p_state)
+void load_scene_system(lua_State* p_state)
 {
 	luaL_requiref(p_state, "Scene", input_lib_require, 1);
 	lua_pop(p_state, 1);

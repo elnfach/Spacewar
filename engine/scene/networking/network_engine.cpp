@@ -15,15 +15,15 @@ struct network_data
 };
 static network_data* s_network_data = nullptr;
 
-void on_client_disconnected(SOCKET clientSocket, addrinfo* addressInf)
+void on_client_disconnected(SOCKET p_client_socket, addrinfo* p_address_info)
 {
 	spacewar::script_engine::invoke_function(3, "OnServerClientDisconnected");
 }
 
-void on_client_connected(SOCKET clientSocket, addrinfo* addressInf)
+void on_client_connected(SOCKET p_client_socket, addrinfo* p_address_info)
 {
-	s_network_data->client_socket = clientSocket;
-	spacewar::script_engine::invoke_function(3, "OnServerClientConnected");
+	s_network_data->client_socket = p_client_socket;
+	spacewar::script_engine::invoke_function(3, "OnServerClientConnected", p_client_socket);
 }
 
 void spacewar::network_engine::initialize()
@@ -37,28 +37,29 @@ void spacewar::network_engine::finalize()
 	s_network_data = nullptr;
 }
 
-void on_server_receive_data(SOCKET clientSocket, CLIENTDATA info, char * data)
+void on_server_receive_data(SOCKET p_client_socket, CLIENTDATA p_info, char * p_data)
 {
 	position pos{};
-	memcpy(&pos, data, sizeof(position));
+	memcpy(&pos, p_data, sizeof(position));
+
 }
 
-void spacewar::network_engine::start_server()
+void spacewar::network_engine::start_server(const std::string_view& p_port)
 {
-	s_network_data->server.start_server("666", TCP_SERVER, on_client_connected, on_client_disconnected, on_server_receive_data);
+	s_network_data->server.start_server(p_port.data(), TCP_SERVER, on_client_connected, on_client_disconnected, on_server_receive_data);
 }
 
 void spacewar::network_engine::stop_server()
 {
 }
 
-void onClientConnect() {
+void on_client_connected() {
 
 }
 
-void spacewar::network_engine::start_client()
+void spacewar::network_engine::start_client(const std::string_view& p_ip_address, const std::string_view& p_port)
 {
-	s_network_data->client.init("127.0.0.1", "666", TCP_SERVER, onClientConnect);
+	s_network_data->client.init(p_ip_address.data(), p_port.data(), TCP_SERVER, on_client_connected);
 	listen();
 }
 
@@ -66,16 +67,11 @@ void spacewar::network_engine::stop_client()
 {
 }
 
-void on_client_receive_data( char * data )
+void on_client_receive_data(char * p_data)
 {
 	position pos{};
-	memcpy(&pos, data, sizeof(position));
-	const auto scene = spacewar::script_engine::get_context_scene()->get_object_by_uuid(1);
-
-	auto& [position, rotation, scale] = scene.get_component<spacewar::TransformComponent>();
-	position = sf::Vector2f{ pos.x, pos.y };
-	rotation = pos.rotation;
-	//spacewar::script_engine::invoke_function(1, "OnClientReceiveData", nullptr);
+	memcpy(&pos, p_data, sizeof(position));
+	spacewar::script_engine::invoke_function(3, "OnClientReceiveData", sf::Vector2f(pos.x, pos.y), pos.rotation);
 }
 
 void spacewar::network_engine::listen()

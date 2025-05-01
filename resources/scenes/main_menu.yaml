@@ -2,7 +2,7 @@ scene_name: MainMenu
 game_objects:
   - uuid: 1
     TransformComponent:
-      translation: [ 25, 100 ]
+      translation: [ -165, -200 ]
       rotation: 0
       scale: [1, 1]
     TextComponent:
@@ -12,9 +12,13 @@ game_objects:
       color: [255,255,255,255]
   - uuid: 2
     TransformComponent:
-      translation: [ 25, 200 ]
+      translation: [ -100, -100 ]
       rotation: 0
       scale: [ 1, 1 ]
+    RectangleTransformComponent:
+      local_translation: [ 115, 15 ]
+      local_rotation: 0
+      local_scale: [ 1, 1 ]
     TextComponent:
       text: Singleplayer
       size: 25
@@ -24,14 +28,18 @@ game_objects:
       on_click_function_name: "OnClick"
       enabled: true
       is_visible_shape: false
-      size: { "width": 100, "height": 25 }
+      size: { "width": 230, "height": 35 }
     ScriptComponent:
       file_name: "singleplayer_button.lua"
   - uuid: 3
     TransformComponent:
-      translation: [ 25, 250 ]
+      translation: [ -100, -50 ]
       rotation: 0
       scale: [ 1, 1 ]
+    RectangleTransformComponent:
+      local_translation: [ 115, 15 ]
+      local_rotation: 0
+      local_scale: [ 1, 1 ]
     TextComponent:
       text: Multiplayer
       size: 25
@@ -40,7 +48,35 @@ game_objects:
     ButtonComponent:
       on_click_function_name: "OnClick"
       enabled: true
-      is_visible_shape: true
-      size: { "width": 100, "height": 25 }
+      is_visible_shape: false
+      size: { "width": 230, "height": 35 }
     ScriptComponent:
       file_name: "multiplayer_button.lua"
+  - uuid: 4
+    TransformComponent:
+      translation: [ -35, 0 ]
+      rotation: 0
+      scale: [ 1, 1 ]
+    RectangleTransformComponent:
+      local_translation: [ 30, 15 ]
+      local_rotation: 0
+      local_scale: [ 1, 1 ]
+    TextComponent:
+      text: Quit
+      size: 25
+      font_path: "KZ Supercell-Magic.ttf"
+      color: [ 255,255,255,255 ]
+    ButtonComponent:
+      on_click_function_name: "OnClick"
+      enabled: true
+      is_visible_shape: false
+      size: { "width": 100, "height": 35 }
+    ScriptComponent:
+      file_name: "quit.lua"
+  - uuid: 5
+    TransformComponent:
+      translation: [ 0, 0 ]
+      rotation: 0
+      scale: [ 1, 1 ]
+    CameraComponent:
+      view: ""

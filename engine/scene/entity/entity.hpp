@@ -36,12 +36,16 @@ namespace spacewar
 		template<class Type, class... Args>
 		Type& add_component(Args&... p_args) const
 		{
-			return m_scene->m_registry.emplace<Type>(m_entity, std::forward<Args>(p_args)...);
+			Type& component = m_scene->m_registry.emplace<Type>(m_entity, std::forward<Args>(p_args)...);
+			m_scene->component_added(*this, component);
+			return component;
 		}
-		template<typename T, typename... Args>
-		T& add_or_replace_component(Args&&... p_args) const
+		template<typename Type, typename... Args>
+		Type& add_or_replace_component(Args&&... p_args) const
 		{
-			return m_scene->m_registry.emplace_or_replace<T>(m_entity, std::forward<Args>(p_args)...);
+			Type& component = m_scene->m_registry.emplace_or_replace<Type>(m_entity, std::forward<Args>(p_args)...);\
+			m_scene->component_added(*this, component);
+			return component;
 		}
 		template<typename Type>
 		[[nodiscard]] Type& get_component() const
@@ -55,10 +59,10 @@ namespace spacewar
 			return m_scene->m_registry.all_of<Type>(m_entity);
 		}
 
-		template<typename T>
+		template<typename Type>
 		void remove_component() const
 		{
-			m_scene->m_registry.remove<T>(m_entity);
+			m_scene->m_registry.remove<Type>(m_entity);
 		}
 
 	private:

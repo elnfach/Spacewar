@@ -6,6 +6,6 @@
 #define LUA_SCENE_SYSTEM_HPP
 
 struct lua_State;
-void load_scene_system_init(lua_State* p_state);
+void load_scene_system(lua_State* p_state);
 
 #endif //LUA_SCENE_SYSTEM_HPP

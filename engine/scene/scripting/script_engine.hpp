@@ -4,7 +4,7 @@
 
 #ifndef SCRIPT_ENGINE_HPP
 #define SCRIPT_ENGINE_HPP
-#include "scene/entity/game_object.hpp"
+#include "scene/entity/entity.hpp"
 
 struct lua_State;
 namespace spacewar
@@ -51,7 +51,7 @@ namespace spacewar
 		static bool script_contains(const uuid& p_uuid);
 		static std::shared_ptr<script> get_script_by_uuid(const uuid& p_uuid);
 	public:
-		static void create_game_object(const game_object& p_game_object);
+		static void create_game_object(const entity& p_game_object);
 
 		template<class ...Args>
 		static void invoke_function(const uuid& p_uuid, const std::string_view& p_func_name, Args... p_args)
@@ -67,7 +67,5 @@ namespace spacewar
 		static scene* get_context_scene();
 	};
 }
-
-
 
 #endif //SCRIPT_ENGINE_HPP

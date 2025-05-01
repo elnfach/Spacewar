@@ -4,11 +4,46 @@
 
 #include "main.hpp"
 
+#include <boost-ext/di.hpp>
+
+#include "scene/main/scene.hpp"
+#include "scene/networking/network_engine.hpp"
+#include "scene/scripting/script_engine.hpp"
+#include "scene/serializer/scene_serializer.hpp"
+
+#define nameof(name) #name
+
 bool spacewar::main::init()
 {
-	m_engine = std::make_unique<engine>();
-	if (m_engine->run())
-	{
+	auto window = sf::RenderWindow(sf::VideoMode({1080, 720}), "Space war");
+	scene_tree scene_tree(window);
+	const auto injector = boost::di::make_injector(
+		boost::di::bind<sf::RenderWindow>().to(window),
+		boost::di::bind<class scene_tree>.to(scene_tree)
+	);
+	const auto instance = injector.create<engine>();
+
+	// \/ HARDCODING \/
+	const auto main_menu = std::make_shared<scene>();
+	const auto multiplayer_menu = std::make_shared<scene>();
+	const auto game = std::make_shared<scene>();
+	// /\ HARDCODING /\
+
+	auto serializer = scene_serializer();
+	serializer.deserialize(RESOURCES"scenes/main_menu.yaml", main_menu);
+	serializer.deserialize(RESOURCES"scenes/multiplayer.yaml", multiplayer_menu);
+	serializer.deserialize(RESOURCES"scenes/game.yaml", game);
+
+	script_engine::initialize();
+	network_engine::initialize();
+
+	scene_tree.add_scene("MainMenu", main_menu);
+	scene_tree.add_scene("MultiplayerMenu", multiplayer_menu);
+	scene_tree.add_scene("Game", game);
+	scene_tree.set_current_scene("MainMenu");
+
+	if (instance.run()) {
+		return false;
 	}
 	return true;
 }

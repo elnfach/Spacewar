@@ -6,6 +6,6 @@
 #define LUA_INPUT_SYSTEM_HPP
 
 struct lua_State;
-void load_input_system_init(lua_State* p_state);
+void load_input_system(lua_State* p_state);
 
 #endif //LUA_INPUT_SYSTEM_HPP

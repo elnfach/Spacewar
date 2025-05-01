@@ -8,5 +8,4 @@ end
 
 function OnClick()
     Scene.LoadSceneByName("Game")
-    Network.CreateServer()
 end

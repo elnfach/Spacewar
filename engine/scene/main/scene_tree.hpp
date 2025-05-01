@@ -4,30 +4,35 @@
 
 #ifndef SCENE_TREE_HPP
 #define SCENE_TREE_HPP
-#include <cmath>
 #include <map>
 #include <memory>
 
 #include "scene.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 
-
 namespace spacewar
 {
-	class scene_tree final {
+	class scene_tree {
 	public:
-		static void initialize(const std::shared_ptr<sf::RenderWindow>& p_window);
-		static void finalize();
-		~scene_tree() = default;
+		scene_tree() = delete;
+		explicit scene_tree(sf::RenderWindow& p_window)
+			: m_window(p_window)
+		{}
 	private:
-		static void start_scene();
+		void start_scene() const;
 	public:
-		static void add_scene(const std::string& p_name, const std::shared_ptr<scene>& p_scene);
-		static void set_current_scene(const std::string& p_name);
-		static scene* get_current_scene();
+		void add_scene(const std::string& p_name, const std::shared_ptr<scene>& p_scene);
+		void set_current_scene(const std::string& p_name);
+		[[nodiscard]] scene* get_current_scene() const;
 
-		static void poll_events();
-		static void update_scene(float_t p_dt);
+		void poll_events();
+		void update_scene(float_t p_dt) const;
+	private:
+		bool m_needs_to_update = false;
+		std::string_view m_scene_name;
+		std::shared_ptr<scene> m_current_scene_node = nullptr;
+		std::map<std::string, std::shared_ptr<scene>> m_scenes;
+		sf::RenderWindow& m_window;
 	};
 }
 

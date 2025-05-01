@@ -6,6 +6,6 @@
 #define LUA_SERVER_SYSTEM_HPP
 
 struct lua_State;
-void load_network_system_init(lua_State* p_state);
+void load_network_system(lua_State* p_state);
 
 #endif //LUA_SERVER_SYSTEM_HPP

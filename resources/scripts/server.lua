@@ -5,11 +5,11 @@ local player_id = 1
 
 function CreateServer()
     print("Create server!")
-    Network.CreateServer()
+    Network.CreateServer("666")
 end
 
 function ReceivePositions()
-
+    
 end
 
 function SendPosition()
@@ -17,11 +17,11 @@ function SendPosition()
         Network.SendData(Entity.GetPosition(player_id), Entity.GetRotation(player_id))
     end
 end
-function OnServerClientConnected()
-    print("CLIENT CONNECTED")
+function OnServerClientConnected(client_socket)
+    print("socket:", client_socket)
     table.insert(players, Entity.Copy(player_id, { 500, 500 }, 0))
     online = online + 1
-    Network.SendData({500, 500}, 0)
+--    Network.SendData(Entity.GetPosition(), 0)
 end
 function OnServerClientDisconnected()
     online = online - 1

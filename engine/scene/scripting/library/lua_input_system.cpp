@@ -30,7 +30,7 @@ static int key_space(lua_State* p_state) {
 
 static int is_key_pressed(lua_State* p_state) {
 	const auto key = static_cast<sf::Keyboard::Key>(lua_tointeger(p_state, 1));
-	lua_pushboolean(p_state, input::isKeyPressed(key));
+	//lua_pushboolean(p_state, input::isKeyPressed(key));
 	return 1;
 }
 
@@ -48,7 +48,7 @@ static int input_lib_require(lua_State *p_state) {
 	return 1;
 }
 
-void load_input_system_init(lua_State* p_state)
+void load_input_system(lua_State* p_state)
 {
 	luaL_requiref(p_state, "Input", input_lib_require, 1);
 	lua_pop(p_state, 1);

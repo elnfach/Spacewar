@@ -4,33 +4,39 @@
 
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
+#include <cmath>
 #include <memory>
 
-#include "scene/main/scene_tree.hpp"
-#include "SFML/Graphics/RenderWindow.hpp"
+#include "input/input.hpp"
 
+namespace sf {
+	class RenderWindow;
+}
 namespace spacewar
 {
+	class scene_tree;
 	class engine {
 	public:
-		engine();
-		~engine() = default;
+		engine() = delete;
+		explicit engine(
+			sf::RenderWindow& p_window,
+			scene_tree& p_scene_tree,
+			input& p_input)
+			: m_window(p_window), m_scene_tree(p_scene_tree), m_input(p_input)
+		{}
 
-		bool run() const;
-		bool running() const;
+		[[nodiscard]] bool run() const;
+		[[nodiscard]] bool is_running() const;
+		void shutdown() const;
+
 	private:
-		struct Data {
-			bool initialized;
-			bool running = true;
+		bool m_is_synced = true;
+		float_t m_frame_limit = 60;
 
-			bool is_synced = true;
-			float_t frame_limit = 60;
-
-			std::shared_ptr<sf::RenderWindow> window = nullptr;
-		} m_data;
+		sf::RenderWindow& m_window;
+		scene_tree& m_scene_tree;
+		input& m_input;
 	};
 }
-
-
 
 #endif //ENGINE_HPP

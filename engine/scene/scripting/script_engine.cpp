@@ -4,12 +4,14 @@
 
 #include "script_engine.hpp"
 
+#include "library/lua_application_system.hpp"
 #include "lua/lua.hpp"
 #include "library/lua_input_system.hpp"
 #include "library/lua_entity_system.hpp"
 #include "library/lua_network_system.hpp"
 #include "library/lua_scene_system.hpp"
-#include "scene/entity/game_object.hpp"
+#include "library/lua_screen_system.hpp"
+#include "library/lua_util.hpp"
 
 struct script_engine_data
 {
@@ -34,11 +36,11 @@ std::shared_ptr<spacewar::script> spacewar::script_engine::get_script_by_uuid(co
 	return s_data->scripts.at(p_uuid);
 }
 
-void spacewar::script_engine::create_game_object(const game_object& p_game_object)
+void spacewar::script_engine::create_game_object(const entity& p_entity)
 {
-	if (const auto& [file_name] = p_game_object.getComponent<ScriptComponent>(); exist_file(file_name))
+	if (const auto& [file_name] = p_entity.get_component<ScriptComponent>(); exist_file(file_name))
 	{
-		const auto [ID] = p_game_object.getComponent<IDComponent>();
+		const auto [ID] = p_entity.get_component<IDComponent>();
 		const auto instance = std::make_shared<script>(ID);
 		instance->load(file_name);
 		s_data->scripts[ID] = instance;
@@ -47,6 +49,18 @@ void spacewar::script_engine::create_game_object(const game_object& p_game_objec
 
 template <>
 void spacewar::script::push_value<int32_t>(const int32_t p_value)
+{
+	lua_pushinteger(m_state, p_value);
+}
+
+template <>
+void spacewar::script::push_value<int64_t>(const int64_t p_value)
+{
+	lua_pushinteger(m_state, p_value);
+}
+
+template <>
+void spacewar::script::push_value<uint64_t>(const uint64_t p_value)
 {
 	lua_pushinteger(m_state, p_value);
 }
@@ -61,6 +75,12 @@ template <>
 void spacewar::script::push_value<double_t>(const double_t p_value)
 {
 	lua_pushnumber(m_state, p_value);
+}
+
+template <>
+void spacewar::script::push_value<sf::Vector2f>(const sf::Vector2f p_value)
+{
+	push_vec2f(m_state, p_value);
 }
 
 template <>
@@ -134,10 +154,12 @@ void spacewar::script::create()
 		luaL_requiref(m_state, lib->name, lib->func, 1);
 		lua_settop(m_state, 0);
 	}
-	load_input_system_init(m_state);
-	load_entity_system_init(m_state);
-	load_scene_system_init(m_state);
-	load_network_system_init(m_state);
+	load_input_system(m_state);
+	load_entity_system(m_state);
+	load_scene_system(m_state);
+	load_network_system(m_state);
+	lua_screen_system(m_state);
+	lua_application_system(m_state);
 }
 
 void spacewar::script::close() const

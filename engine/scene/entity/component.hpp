@@ -26,7 +26,6 @@ namespace spacewar
 
 	struct SpriteComponent
 	{
-		sf::Vector2f offset = { 0.f, 0.f };
 		sf::Texture texture;
 		sf::Vector2f max_size = { 100.f, 100.f };
 		sf::RectangleShape sprite;
@@ -50,12 +49,25 @@ namespace spacewar
 		sf::Color color = sf::Color::White;
 	};
 
+	// Use for drawable components
+	struct RectangleTransformComponent
+	{
+		sf::Vector2f local_translation = { 0.f, 0.f };
+		float_t local_rotation = 0.f;
+		sf::Vector2f local_scale = { 1.f, 1.f };
+	};
+
 	struct ButtonComponent
 	{
 		std::string on_click_function_name;
 		bool enabled = true;
 		bool is_visible_shape = true;
 		sf::RectangleShape rect = sf::RectangleShape(sf::Vector2f(100.f, 25.f));
+	};
+
+	struct CameraComponent
+	{
+		sf::View view;
 	};
 
 	struct NetworkComponent
@@ -65,13 +77,31 @@ namespace spacewar
 		std::string on_client_disconnect_function_name;
 	};
 
-	template<typename... Component>
+	struct SessionComponent
+	{
+		std::string server_address;
+		std::string server_port;
+
+	};
+
+	struct NetworkTransformComponent
+	{
+		float_t sync_interval = 0.1f;
+		sf::Vector2f local_translation = { 0.f, 0.f };
+		float_t local_rotation = 0.f;
+		sf::Vector2f local_scale = { 1.f, 1.f };
+		float_t sensitivity = 0.1f;
+	};
+
+	template<class ...Component>
 	struct ComponentGroup
 	{
 	};
 
-	using AllComponents = ComponentGroup<TransformComponent, SpriteComponent,
-		ScriptComponent, TextComponent, ButtonComponent>;
+	using AllComponents =
+		ComponentGroup<TransformComponent, SpriteComponent, CameraComponent,
+		RectangleTransformComponent, ScriptComponent, TextComponent, ButtonComponent
+	>;
 }
 
 #endif //COMPONENT_HPP

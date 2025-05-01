@@ -2,22 +2,30 @@ scene_name: MultiplayerMenu
 game_objects:
   - uuid: 1
     TransformComponent:
-      translation: [ 8000, 8000 ]
+      translation: [ 100, 100 ]
       rotation: 0
       scale: [ 1, 1 ]
+    RectangleTransformComponent:
+      local_translation: [ 0, 0 ]
+      local_rotation: 0
+      local_scale: [ 1, 1 ]
     SpriteComponent:
-      offset: { "x": 0, "y": 0 }
       texture: "space_craft.png"
       max_size: { "width": 100, "height": 100 }
+    CameraComponent:
+      view: ""
     ScriptComponent:
-      file_name: ""
+      file_name: "player.lua"
   - uuid: 2
     TransformComponent:
-      translation: [ 100, 400 ]
+      translation: [ 500, 500 ]
       rotation: 0
       scale: [ 0.5, 0.5 ]
+    RectangleTransformComponent:
+      local_translation: [ 0, 0 ]
+      local_rotation: 0
+      local_scale: [ 1, 1 ]
     SpriteComponent:
-      offset: { "x": 0, "y": 0 }
       texture: "laser.png"
       max_size: { "width": 50, "height": 50 }
     ScriptComponent:

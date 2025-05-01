@@ -4,16 +4,15 @@
 
 #ifndef MAIN_HPP
 #define MAIN_HPP
-#include <memory>
+
 #include "config/engine.hpp"
+#include "scene/main/scene_tree.hpp"
 
 namespace spacewar
 {
 	class main {
 	public:
-		bool init();
-	private:
-		std::unique_ptr<engine> m_engine;
+		static bool init();
 	};
 
 }
