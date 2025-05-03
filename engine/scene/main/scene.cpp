@@ -6,15 +6,14 @@
 
 #include <iostream>
 
-#include "scene_tree.hpp"
 #include "glm/glm.hpp"
 
-#include "SFML/Window/Mouse.hpp"
+#include "scene_tree.hpp"
 #include "scene/entity/entity.hpp"
 #include "scene/entity/component.hpp"
-#include "scene/networking/network_engine.hpp"
+#include "../../main/context.hpp"
 
-#include "scene/scripting/script_engine.hpp"
+#include "SFML/Window/Mouse.hpp"
 
 template<class ...Component>
 	static void copy_component(entt::registry& dst, entt::registry& src, const std::unordered_map<spacewar::uuid, entt::entity>& enttMap)
@@ -59,8 +58,8 @@ void spacewar::scene::start()
 		for (const auto view = m_registry.view<ScriptComponent>(); const auto e : view)
 		{
 			entity entity = {e, this};
-			script_engine::create_game_object(entity);
-			script_engine::invoke_function(entity.uuid(), "start");
+			m_scriptable_context->create_entity(entity);
+			m_scriptable_context->invoke_function(entity.uuid(), "start", {});
 		}
 	}
 
@@ -69,7 +68,7 @@ void spacewar::scene::start()
 		for (const auto view = m_registry.view<IDComponent, NetworkComponent, ScriptComponent>(); const auto e : view)
 		{
 			auto [id, network, script] = view.get<IDComponent, NetworkComponent, ScriptComponent>(e);
-			script_engine::invoke_function(id.ID, network.create_function);
+			//m_script_engine.invoke_function(id.ID, network.create_function);
 		}
 	}
 }
@@ -129,8 +128,10 @@ void spacewar::scene::draw(sf::RenderWindow& p_window)
 				glm::all(glm::lessThanEqual(mouse_position, max))
 			);
 
+
+			// TODO: Высокая связанность компонентов
 			if (glm::all(conditions) && component.enabled && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-				script_engine::invoke_function(ID.ID, component.on_click_function_name);
+				m_scriptable_context->invoke_function(ID.ID, component.on_click_function_name, {});
 
 			if (component.is_visible_shape)
 				p_window.draw(component.rect);
@@ -165,7 +166,7 @@ void spacewar::scene::update(const float_t p_dt)
 		for (const auto view = m_registry.view<IDComponent, ScriptComponent>(); const auto e : view)
 		{
 			entity entity = {e, this};
-			script_engine::invoke_function(entity.uuid(), "update", p_dt);
+			m_scriptable_context->invoke_function(entity.uuid(), "update", { p_dt });
 		}
 	}
 
@@ -174,7 +175,7 @@ void spacewar::scene::update(const float_t p_dt)
 		for (const auto view = m_registry.view<IDComponent, NetworkComponent, ScriptComponent>(); const auto e : view)
 		{
 			auto [id, network, script] = view.get(e);
-			script_engine::invoke_function(id.ID, "SendPosition");
+			//m_script_engine.invoke_function(id.ID, "SendPosition");
 		}
 	}
 }
@@ -184,7 +185,7 @@ spacewar::entity spacewar::scene::create_entity(const uuid p_uuid)
 	const entity entity = {m_registry.create(), this};
 	entity.add_component<IDComponent>(p_uuid);
 	entity.add_component<TransformComponent>();
-	m_entities[p_uuid] = entity;
+	//m_entities[p_uuid] = entity;
 	return entity;
 }
 
@@ -197,31 +198,35 @@ spacewar::entity spacewar::scene::copy_entity(const entity& p_entity)
 
 void spacewar::scene::destroy_entity(const entity& p_game_object)
 {
-	m_entities.erase(p_game_object.uuid());
+	//m_entities.erase(p_game_object.uuid());
 	m_registry.destroy(p_game_object);
 }
 
 spacewar::entity spacewar::scene::get_entity_by_uuid(const uuid& uuid) const
 {
-	if (m_entities.contains(uuid))
-		return m_entities.at(uuid);
+	/*if (m_entities.contains(uuid))
+		return m_entities.at(uuid);*/
 	return {};
 }
 
 void spacewar::scene::destroy_entity_by_uuid(const uuid& p_uuid)
 {
-	if (m_entities.contains(p_uuid))
-		destroy_entity(m_entities.at(p_uuid));
+	/*if (m_entities.contains(p_uuid))
+		destroy_entity(m_entities.at(p_uuid));*/
 }
 
 void spacewar::scene::on_runtime_start()
 {
 	start();
-	//script_engine::set_current_scene(scene_tree::get_current_scene());
 }
 
 void spacewar::scene::on_runtime_stop()
 {
+}
+
+void spacewar::scene::set_context(const std::shared_ptr<IScriptableContext>& p_context)
+{
+	m_scriptable_context = p_context;
 }
 
 void spacewar::scene::on_update(const float dt, sf::RenderWindow& p_window)

@@ -4,67 +4,42 @@
 
 #ifndef SCRIPT_ENGINE_HPP
 #define SCRIPT_ENGINE_HPP
-#include "scene/entity/entity.hpp"
+#include <memory>
+#include <filesystem>
+#include <unordered_map>
+
+#include "../../main/context.hpp"
+#include "config/uuid.hpp"
 
 struct lua_State;
 namespace spacewar
 {
-	class script
+	class IScript
 	{
-	public:
-		script(uuid p_uuid);
-		~script();
-	private:
-		void create();
-		void close() const;
-
-		template<class Type>
-		void push_value(Type p_value);
-
-		void register_constant(const std::string_view& p_name) const;
-		void call_function(size_t p_size) const;
+	protected:
+		virtual ~IScript() = default;
 	public:
 
-		void load(const std::string& p_name) const;
-
-		template<class ...Args>
-		void invoke_function(const std::string_view& p_func_name, Args... p_args)
-		{
-			const size_t size = sizeof...(Args);
-			register_constant(p_func_name);
-			([&] {
-				push_value(p_args);
-			} (), ...);
-			call_function(size);
-		}
-	private:
-		uuid m_uuid;
-		lua_State* m_state = nullptr;
+		virtual bool load(const std::string_view& p_path) = 0;
+		virtual bool call_function(const ::std::string_view& p_func_name, const std::vector<Variant>& params) = 0;
 	};
 
-	class script_engine final {
+	class scene;
+	class entity;
+	class script_engine final : public IScriptableContext {
 	public:
-		static void initialize();
-		static void finalize();
+		script_engine();
 	private:
-		static bool exist_file(const std::string_view& p_name);
-		static bool script_contains(const uuid& p_uuid);
-		static std::shared_ptr<script> get_script_by_uuid(const uuid& p_uuid);
+		bool exist_file(const std::string_view& p_name) const;
+		bool script_contains(const uuid& p_uuid) const;
+		std::shared_ptr<IScript> get_script_by_uuid(const uuid& p_uuid) const;
 	public:
-		static void create_game_object(const entity& p_game_object);
-
-		template<class ...Args>
-		static void invoke_function(const uuid& p_uuid, const std::string_view& p_func_name, Args... p_args)
-		{
-			if (script_contains(p_uuid))
-			{
-				const auto script = get_script_by_uuid(p_uuid);
-				script->invoke_function(p_func_name.data(), std::forward<Args>(p_args)...);
-			}
-		}
-
-		static void set_current_scene(scene* p_context);
-		static scene* get_context_scene();
+		void create_entity(const entity& p_entity) override;
+		void invoke_function(const uuid& p_uuid, const std::string_view& p_func_name, const std::vector<Variant>& params) const override ;
+	private:
+		std::unordered_map<uuid, std::shared_ptr<IScript>> m_scripts;
+		std::filesystem::path m_scripts_path;
+		std::shared_ptr<scene> m_context;
 	};
 }
 

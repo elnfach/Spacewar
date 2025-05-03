@@ -5,9 +5,6 @@
 #ifndef MAIN_HPP
 #define MAIN_HPP
 
-#include "config/engine.hpp"
-#include "scene/main/scene_tree.hpp"
-
 namespace spacewar
 {
 	class main {

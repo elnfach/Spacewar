@@ -7,9 +7,7 @@
 #include <iostream>
 #include <thread>
 
-
 #include "scene/main/scene_tree.hpp"
-#include "scene/networking/network_engine.hpp"
 #include "scene/scripting/script_engine.hpp"
 #include "scene/serializer/scene_serializer.hpp"
 #include "SFML/Graphics.hpp"
@@ -21,7 +19,6 @@ bool spacewar::engine::run() const
 	sf::Clock clock;
 	float_t elapsed = 0.f;
 	float_t frame_time = 0.f;
-	script_engine::initialize();
 	while (m_window.isOpen()) {
 		m_scene_tree.poll_events();
 		m_scene_tree.get_current_scene()->viewport_resize(m_window.getSize());
@@ -38,8 +35,6 @@ bool spacewar::engine::run() const
 			frame_time = 0.f;
 		}
 	}
-	script_engine::finalize();
-	network_engine::finalize();
 	return true;
 }
 

@@ -61,7 +61,7 @@ static int destroy(lua_State* p_state)
 {
 	if (const auto entity = get_entity(p_state, 1)) {
 		auto& [ID] = entity->get_component<spacewar::IDComponent>();
-		spacewar::script_engine::get_context_scene()->destroy_entity_by_uuid(ID);
+		//spacewar::script_engine::get_context_scene()->destroy_entity_by_uuid(ID);
 	}
 	return 0;
 }
@@ -69,13 +69,13 @@ static int destroy(lua_State* p_state)
 static int copy(lua_State* p_state) {
 	if (const auto entity = get_entity(p_state, 1); entity.has_value())
 	{
-		const auto new_game_object = spacewar::script_engine::get_context_scene()->copy_entity(entity.value());
+		/*const auto new_game_object = spacewar::script_engine::get_context_scene()->copy_entity(entity.value());
 		auto& [translation, rotation, scale] = new_game_object.get_component<spacewar::TransformComponent>();
 		const auto position = to_vec2f(p_state, 2);
 		const float angle = lua_tonumber(p_state, 3);
 		translation = position;
 		rotation = angle;
-		lua_pushinteger(p_state, new_game_object.uuid());
+		lua_pushinteger(p_state, new_game_object.uuid());*/
 		return 1;
 	}
 	return 0;

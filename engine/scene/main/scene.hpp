@@ -4,8 +4,6 @@
 
 #ifndef SCENE_HPP
 #define SCENE_HPP
-#include <cmath>
-#include <memory>
 #include <unordered_map>
 
 #include "entt/entt.hpp"
@@ -14,12 +12,12 @@
 
 namespace spacewar
 {
+	class IScriptableContext;
 	class entity;
 	class scene final {
 	public:
 		scene() = default;
 		~scene() = default;
-
 	private:
 		void start();
 
@@ -40,15 +38,19 @@ namespace spacewar
 		void on_runtime_start();
 		void on_runtime_stop();
 
+		void set_context(const std::shared_ptr<IScriptableContext>& p_context);
+
 		void on_update(float dt, sf::RenderWindow& p_window);
 
 		void viewport_resize(sf::Vector2u p_viewport);
 		sf::Vector2u get_viewport_size() const;
 	private:
 		entt::registry m_registry;
-		std::unordered_map<uuid, entity> m_entities;
+		//std::unordered_map<uuid, entity> m_entities;
 
 		sf::Vector2u m_viewport_size;
+
+		std::shared_ptr<IScriptableContext> m_scriptable_context;
 
 		friend class entity;
 	};

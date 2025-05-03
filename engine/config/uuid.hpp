@@ -6,7 +6,6 @@
 #define UUID_HPP
 #include <cstdint>
 
-
 namespace spacewar
 {
 	class uuid

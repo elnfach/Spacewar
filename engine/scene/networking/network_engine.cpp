@@ -17,13 +17,13 @@ static network_data* s_network_data = nullptr;
 
 void on_client_disconnected(SOCKET p_client_socket, addrinfo* p_address_info)
 {
-	spacewar::script_engine::invoke_function(3, "OnServerClientDisconnected");
+	//spacewar::script_engine::invoke_function(3, "OnServerClientDisconnected");
 }
 
 void on_client_connected(SOCKET p_client_socket, addrinfo* p_address_info)
 {
 	s_network_data->client_socket = p_client_socket;
-	spacewar::script_engine::invoke_function(3, "OnServerClientConnected", p_client_socket);
+	//spacewar::script_engine::invoke_function(3, "OnServerClientConnected", p_client_socket);
 }
 
 void spacewar::network_engine::initialize()
@@ -71,7 +71,7 @@ void on_client_receive_data(char * p_data)
 {
 	position pos{};
 	memcpy(&pos, p_data, sizeof(position));
-	spacewar::script_engine::invoke_function(3, "OnClientReceiveData", sf::Vector2f(pos.x, pos.y), pos.rotation);
+	//spacewar::script_engine::invoke_function(3, "OnClientReceiveData", sf::Vector2f(pos.x, pos.y), pos.rotation);
 }
 
 void spacewar::network_engine::listen()

@@ -12,6 +12,7 @@
 
 static int get_window_size(lua_State *p_state) {
 	//return push_vec2f(p_state, sf::Vector2f(spacewar::scene_tree::get_current_scene()->get_viewport_size()));
+	return 0;
 }
 
 static constexpr luaL_Reg scene[] = {

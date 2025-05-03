@@ -5,7 +5,6 @@
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 #include <cmath>
-#include <memory>
 
 #include "input/input.hpp"
 
@@ -15,6 +14,7 @@ namespace sf {
 namespace spacewar
 {
 	class scene_tree;
+	class script_engine;
 	class engine {
 	public:
 		engine() = delete;

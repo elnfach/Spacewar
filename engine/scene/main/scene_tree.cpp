@@ -13,8 +13,8 @@ void spacewar::scene_tree::add_scene(const std::string& p_name, const std::share
 	}
 }
 
-void spacewar::scene_tree::set_current_scene(const std::string& p_name) {
-	if (m_scenes.contains(p_name)) {
+void spacewar::scene_tree::set_current_scene(const std::string_view& p_name) {
+	if (m_scenes.contains(p_name.data())) {
 		m_scene_name = p_name;
 		m_needs_to_update = true;
 	}
@@ -33,6 +33,7 @@ void spacewar::scene_tree::poll_events() {
 }
 
 void spacewar::scene_tree::start_scene() const {
+	m_current_scene_node->set_context(m_script_engine);
 	m_current_scene_node->on_runtime_start();
 }
 

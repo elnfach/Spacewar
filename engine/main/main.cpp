@@ -6,7 +6,9 @@
 
 #include <boost-ext/di.hpp>
 
+#include "config/engine.hpp"
 #include "scene/main/scene.hpp"
+#include "scene/main/scene_tree.hpp"
 #include "scene/networking/network_engine.hpp"
 #include "scene/scripting/script_engine.hpp"
 #include "scene/serializer/scene_serializer.hpp"
@@ -16,10 +18,13 @@
 bool spacewar::main::init()
 {
 	auto window = sf::RenderWindow(sf::VideoMode({1080, 720}), "Space war");
-	scene_tree scene_tree(window);
+	input input_system(window);
+	const auto script_engine = std::make_shared<class script_engine>();
+	scene_tree scene_tree(window, script_engine);
 	const auto injector = boost::di::make_injector(
 		boost::di::bind<sf::RenderWindow>().to(window),
-		boost::di::bind<class scene_tree>.to(scene_tree)
+		boost::di::bind<class scene_tree>.to(scene_tree),
+		boost::di::bind<input>().to(input_system)
 	);
 	const auto instance = injector.create<engine>();
 
@@ -33,9 +38,6 @@ bool spacewar::main::init()
 	serializer.deserialize(RESOURCES"scenes/main_menu.yaml", main_menu);
 	serializer.deserialize(RESOURCES"scenes/multiplayer.yaml", multiplayer_menu);
 	serializer.deserialize(RESOURCES"scenes/game.yaml", game);
-
-	script_engine::initialize();
-	network_engine::initialize();
 
 	scene_tree.add_scene("MainMenu", main_menu);
 	scene_tree.add_scene("MultiplayerMenu", multiplayer_menu);
