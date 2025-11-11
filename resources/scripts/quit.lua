@@ -1,5 +1,3 @@
-
-
 function OnClick()
-    Application.Quit();
+    print("CLICKED")
 end

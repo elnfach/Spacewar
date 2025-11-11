@@ -9,17 +9,11 @@ game_objects:
       rotation: 0
       scale: [ 1, 1 ]
     NetworkComponent:
-      create_function: "CreateServer"
+      create_function: "startServer"
       on_client_connect_function_name: "OnServerClientConnected"
       on_client_disconnect_function_name: "OnServerClientDisconnected"
     ScriptComponent:
       file_name: "server.lua"
-  - uuid: 4
-    TransformComponent:
-      translation: [ 0, 0 ]
-      rotation: 0
-      scale: [ 1, 1 ]
-prefabs:
   - uuid: 2   # Player
     TransformComponent:
       translation: [ 0, 0 ]
@@ -50,3 +44,9 @@ prefabs:
       max_size: { "width": 50, "height": 50 }
     ScriptComponent:
       file_name: "laser.lua"
+  - uuid: 4
+    TransformComponent:
+      translation: [ 0, 0 ]
+      rotation: 0
+      scale: [ 1, 1 ]
+prefabs:

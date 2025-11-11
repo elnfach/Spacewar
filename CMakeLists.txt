@@ -15,6 +15,7 @@ add_executable(spacewar ${ALL_SOURCES} spacewar.cpp)
 target_include_directories(spacewar PRIVATE engine)
 target_include_directories(spacewar PRIVATE thirdparty/lua/src)
 target_include_directories(spacewar PRIVATE thirdparty/glm/include)
+target_include_directories(spacewar PRIVATE thirdparty/sol2/include)
 target_include_directories(spacewar PRIVATE thirdparty/sfml/include)
 target_include_directories(spacewar PRIVATE thirdparty/json/include)
 target_include_directories(spacewar PRIVATE thirdparty/entt/include)
@@ -28,6 +29,9 @@ target_link_libraries(spacewar PRIVATE sfml-graphics)
 
 add_subdirectory(thirdparty/lua ${CMAKE_CURRENT_BINARY_DIR}/thirdparty/lua)
 target_link_libraries(spacewar PRIVATE lua)
+
+add_subdirectory(thirdparty/sol2 ${CMAKE_CURRENT_BINARY_DIR}/thirdparty/sol2)
+target_link_libraries(spacewar PRIVATE sol2::sol2)
 
 target_link_libraries(spacewar PRIVATE Ws2_32)
 

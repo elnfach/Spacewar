@@ -2,26 +2,13 @@ local player_id = 1
 local players = {}
 local online = 0
 
-
-
-
-function OnClientConnected()
-
-end
-
-
-
-
-
-
-
 function OnClientReceiveData(position, rotation)
     print("x: ", position[1], ", y: ", position[2], ", rotation: ", rotation)
 end
 
-function CreateClient()
-    print("CreateClient")
-    Network.CreateClient("127.0.0.1", "666")
+function connect()
+    print("connect")
+    network:Connect("127.0.0.1", "666")
 end
 function Listen()
     --Entity.SetPosition(1, )

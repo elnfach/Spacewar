@@ -6,6 +6,7 @@
 
 #include <boost-ext/di.hpp>
 
+#include "config/application.hpp"
 #include "config/engine.hpp"
 #include "scene/main/scene.hpp"
 #include "scene/main/scene_tree.hpp"

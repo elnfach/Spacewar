@@ -6,6 +6,7 @@
 
 #include "ahxrwinsock/ahxrwinsock.h"
 #include "scene/scripting/script_engine.hpp"
+#include "SFML/System/Vector2.hpp"
 
 struct network_data
 {
@@ -13,7 +14,7 @@ struct network_data
 	AHXRCLIENT client;
 	SOCKET client_socket;
 };
-static network_data* s_network_data = nullptr;
+network_data* s_data = nullptr;
 
 void on_client_disconnected(SOCKET p_client_socket, addrinfo* p_address_info)
 {
@@ -22,31 +23,35 @@ void on_client_disconnected(SOCKET p_client_socket, addrinfo* p_address_info)
 
 void on_client_connected(SOCKET p_client_socket, addrinfo* p_address_info)
 {
-	s_network_data->client_socket = p_client_socket;
+	//s_network_data->client_socket = p_client_socket;
 	//spacewar::script_engine::invoke_function(3, "OnServerClientConnected", p_client_socket);
-}
-
-void spacewar::network_engine::initialize()
-{
-	s_network_data = new network_data();
-}
-
-void spacewar::network_engine::finalize()
-{
-	delete s_network_data;
-	s_network_data = nullptr;
 }
 
 void on_server_receive_data(SOCKET p_client_socket, CLIENTDATA p_info, char * p_data)
 {
 	position pos{};
 	memcpy(&pos, p_data, sizeof(position));
+}
 
+spacewar::network_engine& spacewar::network_engine::get_instance()
+{
+	static network_engine s_engine;
+	return s_engine;
+}
+
+spacewar::network_engine::network_engine()
+{
+	s_data = new network_data;
+}
+
+spacewar::network_engine::~network_engine()
+{
+	delete s_data;
 }
 
 void spacewar::network_engine::start_server(const std::string_view& p_port)
 {
-	s_network_data->server.start_server(p_port.data(), TCP_SERVER, on_client_connected, on_client_disconnected, on_server_receive_data);
+	s_data->server.start_server(p_port.data(), TCP_SERVER, on_client_connected, on_client_disconnected, on_server_receive_data);
 }
 
 void spacewar::network_engine::stop_server()
@@ -59,7 +64,7 @@ void on_client_connected() {
 
 void spacewar::network_engine::start_client(const std::string_view& p_ip_address, const std::string_view& p_port)
 {
-	s_network_data->client.init(p_ip_address.data(), p_port.data(), TCP_SERVER, on_client_connected);
+	s_data->client.init(p_ip_address.data(), p_port.data(), TCP_SERVER, on_client_connected);
 	listen();
 }
 
@@ -77,15 +82,19 @@ void on_client_receive_data(char * p_data)
 void spacewar::network_engine::listen()
 {
 	std::cout << "listening..." << std::endl;
-	s_network_data->client.listen(on_client_receive_data, true);
+	s_data->client.listen(on_client_receive_data, true);
 }
 
-void spacewar::network_engine::client_send_data(const position& p_position)
+void spacewar::network_engine::client_send_data(const sf::Vector2f& p_position, const float_t rotation, const sf::Vector2f& p_scale)
 {
-	s_network_data->client.send_data(reinterpret_cast<const char*>(&p_position));
+	position pos{};
+	pos.x = 50;
+	pos.y = 50;
+	pos.rotation = 0;
+	s_data->client.send_data(reinterpret_cast<const char*>(&pos));
 }
 
 void spacewar::network_engine::server_send_data(const position& p_position)
 {
-	s_network_data->server.send_data(s_network_data->client_socket, reinterpret_cast<const char*>(&p_position));
+	s_data->server.send_data(s_data->client_socket, reinterpret_cast<const char*>(&p_position));
 }

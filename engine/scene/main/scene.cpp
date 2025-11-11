@@ -59,7 +59,7 @@ void spacewar::scene::start()
 		{
 			entity entity = {e, this};
 			m_scriptable_context->create_entity(entity);
-			m_scriptable_context->invoke_function(entity.uuid(), "start", {});
+			m_scriptable_context->invoke_function(entity.uuid(), "start");
 		}
 	}
 
@@ -68,7 +68,7 @@ void spacewar::scene::start()
 		for (const auto view = m_registry.view<IDComponent, NetworkComponent, ScriptComponent>(); const auto e : view)
 		{
 			auto [id, network, script] = view.get<IDComponent, NetworkComponent, ScriptComponent>(e);
-			//m_script_engine.invoke_function(id.ID, network.create_function);
+			m_scriptable_context->invoke_function(id.ID, network.create_function);
 		}
 	}
 }
@@ -131,7 +131,7 @@ void spacewar::scene::draw(sf::RenderWindow& p_window)
 
 			// TODO: Высокая связанность компонентов
 			if (glm::all(conditions) && component.enabled && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-				m_scriptable_context->invoke_function(ID.ID, component.on_click_function_name, {});
+				m_scriptable_context->invoke_function(ID.ID, component.on_click_function_name);
 
 			if (component.is_visible_shape)
 				p_window.draw(component.rect);
@@ -166,7 +166,7 @@ void spacewar::scene::update(const float_t p_dt)
 		for (const auto view = m_registry.view<IDComponent, ScriptComponent>(); const auto e : view)
 		{
 			entity entity = {e, this};
-			m_scriptable_context->invoke_function(entity.uuid(), "update", { p_dt });
+			m_scriptable_context->invoke_function(entity.uuid(), "update", p_dt);
 		}
 	}
 
@@ -175,7 +175,7 @@ void spacewar::scene::update(const float_t p_dt)
 		for (const auto view = m_registry.view<IDComponent, NetworkComponent, ScriptComponent>(); const auto e : view)
 		{
 			auto [id, network, script] = view.get(e);
-			//m_script_engine.invoke_function(id.ID, "SendPosition");
+			//m_scriptable_context->invoke_function(id.ID, "SendPosition");
 		}
 	}
 }
@@ -224,9 +224,19 @@ void spacewar::scene::on_runtime_stop()
 {
 }
 
-void spacewar::scene::set_context(const std::shared_ptr<IScriptableContext>& p_context)
+void spacewar::scene::set_context(const std::shared_ptr<script_engine>& p_context)
 {
 	m_scriptable_context = p_context;
+}
+
+void spacewar::scene::set_scene_by_name(const std::string_view& p_scene_name)
+{
+	m_events.push(std::pair(SceneEventSType::CHANGE_SCENE, p_scene_name));
+}
+
+bool spacewar::scene::key_is_pressed(const sf::Keyboard::Key& p_key)
+{
+	m_events.push(std::pair(SceneEventSType::IS_KEY_PRESSED, (char*)p_key));
 }
 
 void spacewar::scene::on_update(const float dt, sf::RenderWindow& p_window)

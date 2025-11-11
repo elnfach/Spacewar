@@ -1,23 +1,15 @@
 local player_id = 1
 local bullet_id = 2
 
-function start()
-
-end
-
 local players = {}
 local online = 0
 
-function OnClientConnected()
-    print("HELLO NEW CLIENT!")
-    table.insert(players, Entity.Copy(player_id, { 100, 200 }, 0, 0))
-end
-
-function OnClientDisconnected()
-    for index, uuid in ipairs(players) do
-        Entity.Destroy(uuid)
-    end
-end
+-- Network
+local difference = 0.0
+local position = { x = 0, y = 0 }
+local rotation = 0.0
+local scale = { x = 0, y = 0 }
+local network_transform_sensitivity = 0.1
 
 local colddown = 0.5 -- Время до следующего выстрела
 local colddown_timer = colddown
@@ -31,10 +23,14 @@ local boost = 0
 local impulse = 0
 
 function update(dt)
-    if not isOwner then
-        return
+    difference = math.abs((transform.position.x - position.x) + (transform.position.y - position.y) + (transform.rotation - rotation) + (transform.scale.x - scale.x) + (transform.scale.y - scale.y))
+    if (difference > network_transform_sensitivity) then
+        position = transform.position
+        rotation = transform.rotation
+        scale = transform.scale
+        network:Send(transform.position, transform.rotation, transform.scale)
     end
-    if(Input.IsKeyPressed(Input.Key_A())) then
+    if(input:IsKeyPressed(input.key.a)) then
         if angle_impulse >= -max_angle_impulse then
             angle_impulse = angle_impulse - dt * speed
         end
@@ -43,7 +39,7 @@ function update(dt)
             angle_impulse = angle_impulse + dt * speed;
         end
     end
-    if(Input.IsKeyPressed(Input.Key_D())) then
+    if(input:IsKeyPressed(input.key.d)) then
         if angle_impulse <= max_angle_impulse then
             angle_impulse = angle_impulse + dt * speed
         end
@@ -56,14 +52,14 @@ function update(dt)
     if colddown_timer <= colddown then
         colddown_timer = colddown_timer + dt
     end
-    if Input.IsKeyPressed(Input.Key_Space()) then
+    if input:IsKeyPressed(input.key.space) then
         if(colddown_timer >= colddown) then
             Entity.Copy(bullet_id, Entity.GetPosition(player_id), Entity.GetRotation(player_id))
             colddown_timer = 0
         end
     end
 
-    if(Input.IsKeyPressed(Input.Key_W())) then
+    if(input:IsKeyPressed(input.key.w)) then
         if(impulse <= max_impulse) then
             impulse = impulse + dt
             radians = math.rad(Entity.GetRotation(player_id))
@@ -76,6 +72,6 @@ function update(dt)
     boost = impulse / dt
     local moveX = math.sin(radians) * boost
     local moveY = -math.cos(radians) * boost
-    Entity.Move(player_id, moveX, moveY)
-    Entity.Rotate(player_id, angle_impulse)
+    transform:SetPosition(moveX, moveY)
+    transform:SetRotation(angle_impulse)
 end

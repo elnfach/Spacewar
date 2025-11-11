@@ -22,7 +22,7 @@ namespace spacewar
 	private:
 		void start_scene() const;
 	public:
-		void add_scene(const std::string& p_name, const std::shared_ptr<scene>& p_scene);
+		void add_scene(const std::string_view& p_name, const std::shared_ptr<scene>& p_scene);
 		void set_current_scene(const std::string_view& p_name);
 		[[nodiscard]] scene* get_current_scene() const;
 
@@ -33,7 +33,7 @@ namespace spacewar
 		std::string_view m_scene_name;
 		std::shared_ptr<scene> m_current_scene_node = nullptr;
 		std::shared_ptr<script_engine> m_script_engine = nullptr;
-		std::map<std::string, std::shared_ptr<scene>> m_scenes;
+		std::map<std::string_view, std::shared_ptr<scene>> m_scenes;
 		sf::RenderWindow& m_window;
 	};
 }

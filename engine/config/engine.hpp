@@ -8,6 +8,8 @@
 
 #include "input/input.hpp"
 
+
+
 namespace sf {
 	class RenderWindow;
 }

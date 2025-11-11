@@ -7,14 +7,13 @@
 
 #include <optional>
 
-#include "lua/lua.hpp"
 #include "scene/entity/entity.hpp"
 
-inline std::optional<spacewar::entity> get_entity(lua_State* p_state, const int p_id) {
+/*inline std::optional<spacewar::entity> get_entity(lua_State* p_state, const int p_id) {
 	const auto id = lua_tointeger(p_state, p_id);
 	//const auto scene = spacewar::script_engine::get_context_scene();
 	//return scene->get_entity_by_uuid(id);
 	return {};
-}
+}*/
 
 #endif //GET_ENTITY_HPP

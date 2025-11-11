@@ -1,13 +1,3 @@
-
-
-function start()
-
-end
-
-function update(dt)
-
-end
-
 function OnClick()
-    Scene.LoadSceneByName("MultiplayerMenu")
+    scene:SetScene("MultiplayerMenu")
 end

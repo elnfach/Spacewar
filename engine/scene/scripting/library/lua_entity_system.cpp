@@ -1,4 +1,4 @@
-//
+/*//
 // Created by elnfach on 20.04.2025.
 //
 
@@ -75,7 +75,7 @@ static int copy(lua_State* p_state) {
 		const float angle = lua_tonumber(p_state, 3);
 		translation = position;
 		rotation = angle;
-		lua_pushinteger(p_state, new_game_object.uuid());*/
+		lua_pushinteger(p_state, new_game_object.uuid());#1#
 		return 1;
 	}
 	return 0;
@@ -101,4 +101,4 @@ void load_entity_system(lua_State* p_state)
 {
 	luaL_requiref(p_state, "Entity", input_lib_require, 1);
 	lua_pop(p_state, 1);
-}
+}*/

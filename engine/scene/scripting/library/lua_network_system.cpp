@@ -1,3 +1,4 @@
+/*
 //
 // Created by elnfach on 20.04.2025.
 //
@@ -55,3 +56,4 @@ void load_network_system(lua_State* p_state)
 	luaL_requiref(p_state, "Network", input_lib_require, 1);
 	lua_pop(p_state, 1);
 }
+*/

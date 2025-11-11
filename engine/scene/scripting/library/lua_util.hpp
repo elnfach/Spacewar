@@ -4,10 +4,9 @@
 
 #ifndef LUA_UTIL_HPP
 #define LUA_UTIL_HPP
-#include "lua/lua.hpp"
 #include "SFML/System/Vector2.hpp"
 
-inline int push_vec2f(lua_State* p_state, const sf::Vector2f& p_vec)
+/*inline int push_vec2f(lua_State* p_state, const sf::Vector2f& p_vec)
 {
 	lua_createtable(p_state, 2, 0);
 	lua_pushnumber(p_state, p_vec.x);
@@ -30,6 +29,6 @@ inline sf::Vector2f to_vec2f(lua_State* p_state, const int p_id)
 	lua_pop(p_state, 1);
 	lua_pop(p_state, 1);
 	return {x, y};
-}
+}*/
 
 #endif //LUA_UTIL_HPP

@@ -2,7 +2,7 @@ scene_name: MultiplayerMenu
 game_objects:
   - uuid: 1
     TransformComponent:
-      translation: [ 100, 100 ]
+      translation: [ 10, 10 ]
       rotation: 0
       scale: [ 1, 1 ]
     RectangleTransformComponent:
@@ -36,7 +36,7 @@ game_objects:
       rotation: 0
       scale: [ 1, 1 ]
     NetworkComponent:
-      create_function: "CreateClient"
+      create_function: "connect"
       on_client_connect_function_name: "OnClientConnected"
       on_client_disconnect_function_name: "OnClientDisconnected"
     ScriptComponent:

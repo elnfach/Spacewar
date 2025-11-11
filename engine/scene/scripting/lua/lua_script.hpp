@@ -8,23 +8,34 @@
 #include <vector>
 
 #include "scene/scripting/script_engine.hpp"
+#include "sol/state.hpp"
 
-struct lua_State;
 namespace spacewar
 {
-	class lua_script final : public IScript
+	class lua_script_api;
+}
+
+namespace spacewar
+{
+	class lua_script final
 	{
 	public:
-		lua_script();
-		~lua_script() override;
-	private:
-		template<class Type>
-		void push_value(Type p_value);
+		explicit lua_script(const std::shared_ptr<lua_script_api>& p_api);
 	public:
-		bool load(const std::string_view& p_path) override;
-		bool call_function(const ::std::string_view& p_func_name, const std::vector<Variant>& params) override;
+		bool load(const std::string_view& p_path);
+
+		template<class ...Args>
+		bool call_function(const std::string_view& p_func_name, Args& ...p_args)
+		{
+			const sol::function func = m_state[p_func_name.data()];
+			if (!func.valid()) {
+				return false;
+			}
+			func(std::forward<Args>(p_args)...);
+			return true;
+		}
 	private:
-		lua_State* m_state = nullptr;
+		sol::state m_state;
 	};
 }
 

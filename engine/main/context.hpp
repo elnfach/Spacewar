@@ -8,6 +8,11 @@
 #include <variant>
 #include <vector>
 
+namespace sol
+{
+	class state;
+}
+
 namespace spacewar
 {
 	class entity;
@@ -23,11 +28,29 @@ namespace spacewar
 		virtual ~IScriptableContext() = default;
 	public:
 		virtual void create_entity(const entity& p_entity) = 0;
-		virtual void invoke_function(
+
+		template<class ...Args>
+		void invoke_function(
 			const uuid& p_uuid,
 			const std::string_view& p_func_name,
-			const std::vector<Variant>& params) const
-		= 0;
+			Args& ...p_args) {}
+	};
+
+	class IScriptableAPIContext
+	{
+	protected:
+		virtual ~IScriptableAPIContext() = default;
+	public:
+		virtual void register_components() = 0;
+		virtual void register_types() = 0;
+		virtual void register_functions() = 0;
+	};
+
+	class ILuaScriptableStateAPIContext {
+	public:
+		virtual ~ILuaScriptableStateAPIContext() = default;
+	public:
+		virtual sol::state& get_state() = 0;
 	};
 }
 

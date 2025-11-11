@@ -22,6 +22,9 @@ namespace spacewar
 		sf::Vector2f translation = { 0.f, 0.f };
 		float_t rotation = 0.f;
 		sf::Vector2f scale = { 1.f, 1.f };
+
+		void set_position(const float_t p_x, const float_t p_y) { translation = sf::Vector2f(p_x, p_y); }
+		void set_rotation(const float_t p_rotation) { rotation = p_rotation; }
 	};
 
 	struct SpriteComponent
